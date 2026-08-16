@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import { footerLinks } from '../data/navigation';
-import { site, mailtoLink } from '../data/site';
+import { site, mailtoLink, telLink } from '../data/site';
 
 const year = new Date().getFullYear();
 ---
@@ -38,7 +38,17 @@ const year = new Date().getFullYear();
             <li>
               <address>{site.address.street}, {site.address.postalCode} {site.address.city}</address>
             </li>
-            <li><a href={mailtoLink}>{site.email}</a></li>
+            {telLink && (
+              <li>
+                <a href={telLink}>{site.phone}</a>
+              </li>
+            )}
+            <li>
+              {/* <wbr> zorgt dat het adres bij de @ afbreekt in plaats van middenin een woord. */}
+              <a href={mailtoLink}>
+                {site.email.split('@')[0]}<wbr />@{site.email.split('@')[1]}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -100,7 +110,7 @@ const year = new Date().getFullYear();
     text-decoration: none;
     /* Ruim tikdoel op mobiel. */
     padding-block: 0.4rem;
-    word-break: break-word;
+    overflow-wrap: break-word;
     transition: color 0.2s var(--ease);
   }
 
@@ -133,7 +143,8 @@ const year = new Date().getFullYear();
 
   @media (min-width: 861px) {
     .site-footer__top {
-      grid-template-columns: 1.1fr 0.9fr;
+      /* Iets meer ruimte voor de gegevenskolom, zodat het e-mailadres past. */
+      grid-template-columns: 0.9fr 1.1fr;
     }
   }
 </style>

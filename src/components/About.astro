@@ -5,7 +5,7 @@ import { site } from '../data/site';
 
 const facts = [
   { label: 'Opgericht', value: site.founded },
-  { label: 'Ondernemingsvorm', value: site.legalForm },
+  { label: 'Rechtsvorm', value: site.legalForm },
   { label: 'KVK', value: site.kvk },
   { label: 'Vestiging', value: site.address.city },
 ];
@@ -161,6 +161,8 @@ const facts = [
   }
 
   .about__facts dt {
+    /* Lange labels in hoofdletters mogen de kolom nooit oprekken. */
+    overflow-wrap: break-word;
     font-size: 0.78rem;
     font-weight: 620;
     letter-spacing: 0.1em;

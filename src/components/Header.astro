@@ -23,16 +23,19 @@ import { whatsappLink } from '../data/site';
 
     <div class="site-header__actions">
       {
-        /* De WhatsApp-knop verschijnt automatisch zodra `whatsapp` in src/data/site.ts is ingevuld. */
+        /* De WhatsApp-knop verschijnt automatisch zodra `whatsapp` in src/data/site.ts is
+           ingevuld. Op smalle schermen wordt hij compact (alleen het icoon), zodat WhatsApp
+           overal op de pagina met één tik bereikbaar blijft. */
         whatsappLink && (
           <a
-            class="btn btn--outline header-cta header-cta--secondary"
+            class="btn btn--outline header-cta header-cta--wa"
             href={whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="WhatsApp"
           >
             <Icon name="whatsapp" size={18} />
-            WhatsApp
+            <span class="header-cta__label">WhatsApp</span>
           </a>
         )
       }
@@ -242,18 +245,29 @@ import { whatsappLink } from '../data/site';
   }
 
   @media (max-width: 900px) {
-    .nav-desktop,
-    .header-cta--secondary {
+    .nav-desktop {
       display: none;
     }
 
     .nav-toggle {
       display: inline-flex;
     }
+
+    /* WhatsApp wordt compact: alleen het icoon, maar met behoud van een
+       toegankelijke naam via het aria-label. */
+    .header-cta--wa {
+      width: 46px;
+      padding-inline: 0;
+    }
+
+    .header-cta__label {
+      display: none;
+    }
   }
 
   @media (max-width: 560px) {
-    .header-cta {
+    /* Alleen de tekstuele CTA verdwijnt; WhatsApp blijft bereikbaar. */
+    .header-cta:not(.header-cta--wa) {
       display: none;
     }
   }

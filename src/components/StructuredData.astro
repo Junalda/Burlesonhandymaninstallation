@@ -18,7 +18,7 @@ const structuredData = {
   email: site.email,
   description: site.seo.description,
   foundingDate: site.founded,
-  ...(site.phone ? { telephone: site.phone } : {}),
+  ...(site.phoneInternational ? { telephone: site.phoneInternational } : {}),
   founder: {
     '@type': 'Person',
     name: site.owner,

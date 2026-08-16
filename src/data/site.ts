@@ -26,16 +26,20 @@ export interface SiteConfig {
   kvk: string;
   email: string;
   /**
-   * TODO: vul in zodra er een zakelijk telefoonnummer beschikbaar is.
+   * Telefoonnummer zoals het op de site getoond wordt.
    * Laat leeg (null) als er geen nummer is — verzin nooit een nummer.
-   * Zodra dit is ingevuld verschijnen de telefoon-CTA's automatisch.
+   * De telefoon-CTA's verschijnen automatisch zodra dit is ingevuld.
    */
   phone: string | null;
   /**
-   * TODO: vul in zodra WhatsApp gebruikt wordt.
-   * Formaat: internationaal nummer zonder + of spaties, bijv. '31612345678'.
+   * Hetzelfde nummer in internationale notatie voor de `tel:`-link,
+   * zodat bellen ook vanuit het buitenland werkt.
+   */
+  phoneInternational: string | null;
+  /**
+   * WhatsApp-nummer, internationaal zonder + en zonder spaties.
    * Zodra dit is ingevuld verschijnt de WhatsApp-CTA automatisch in de
-   * CTA-sectie, de header en de contactsectie.
+   * header, de CTA-sectie en de contactsectie.
    */
   whatsapp: string | null;
   address: SiteAddress;
@@ -57,8 +61,9 @@ export const site: SiteConfig = {
   founded: '2024',
   kvk: '99551500',
   email: 'Burlesonhandymaninstallation@gmail.com',
-  phone: null,
-  whatsapp: null,
+  phone: '06 57 92 03 03',
+  phoneInternational: '+31657920303',
+  whatsapp: '31657920303',
   address: {
     street: 'Prinsenstraat 18 A',
     postalCode: '7121 AG',
@@ -101,7 +106,9 @@ export const whatsappLink = site.whatsapp
     )}`
   : null;
 
-/** Telefoonlink; `null` zolang er geen nummer bekend is. */
-export const telLink = site.phone ? `tel:${site.phone.replace(/[^\d+]/g, '')}` : null;
+/** Telefoonlink in internationale notatie; `null` zolang er geen nummer bekend is. */
+export const telLink = site.phoneInternational
+  ? `tel:${site.phoneInternational.replace(/[^\d+]/g, '')}`
+  : null;
 
 export const formattedAddress = `${site.address.street}, ${site.address.postalCode} ${site.address.city}`;

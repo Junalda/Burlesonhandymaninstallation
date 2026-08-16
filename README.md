@@ -58,22 +58,27 @@ Bijna alle teksten en gegevens staan in `src/data/`:
 - **`certificates.ts`** — VCA en GIB.
 - **`navigation.ts`** — menu- en footerlinks.
 
-## Openstaande integratiepunten (TODO)
+## Telefoon en WhatsApp
 
-### 1. Telefoonnummer en WhatsApp
-
-Er is bewust **geen** telefoon- of WhatsApp-nummer opgenomen, omdat deze niet zijn aangeleverd.
-Vul ze in `src/data/site.ts` in:
+Beide staan in `src/data/site.ts` en gebruiken hetzelfde nummer:
 
 ```ts
-phone: '+31 6 12345678',   // null = knoppen blijven verborgen
-whatsapp: '31612345678',   // internationaal, zonder + en zonder spaties
+phone: '06 57 92 03 03',        // zoals getoond op de site
+phoneInternational: '+31657920303', // voor de tel:-link en schema.org
+whatsapp: '31657920303',        // wa.me-formaat: zonder + en zonder spaties
 ```
 
-Zodra een waarde is ingevuld verschijnen de bijbehorende knoppen automatisch in de header,
-de CTA-sectie en de contactsectie. Er is geen extra code voor nodig.
+Wijzig het nummer op deze ene plek; header, CTA-sectie, contactsectie, footer en de
+gestructureerde data volgen automatisch. Zet een waarde op `null` om de bijbehorende knoppen
+te verbergen.
 
-### 2. Backend voor het contactformulier
+De WhatsApp-knop in de header wordt op schermen smaller dan 900 px compact (alleen het icoon)
+en blijft ook op mobiel zichtbaar, zodat bezoekers die via WhatsApp of een doorverwijzing
+binnenkomen overal op de pagina met één tik kunnen reageren.
+
+## Openstaande integratiepunten (TODO)
+
+### 1. Backend voor het contactformulier
 
 Het formulier valideert en verstuurt, maar er is **nog geen verzendservice gekoppeld**. Zolang
 dat zo is, wordt er géén verzending voorgespiegeld: de aanvraag wordt klaargezet in het
@@ -127,7 +132,7 @@ export const POST: APIRoute = async ({ request }) => {
 
 Zet daarna `PUBLIC_CONTACT_ENDPOINT=/api/contact`.
 
-### 3. Beeldmateriaal
+### 2. Beeldmateriaal
 
 Er is nog geen fotomateriaal aangeleverd. De hero en de over-ons-sectie zijn zo gebouwd dat ze
 ook zonder foto af zijn. Toevoegen kan zonder herontwerp:
@@ -140,14 +145,14 @@ ook zonder foto af zijn. Toevoegen kan zonder herontwerp:
 Gebruik `astro:assets` (`<Image />`) zodat afbeeldingen automatisch worden geoptimaliseerd en
 onder de vouw lui geladen worden.
 
-### 4. Domein
+### 3. Domein
 
 Het domein staat op twee plekken en moet worden aangepast zodra het definitief is:
 
 - `astro.config.mjs` (`SITE_URL` — bepaalt sitemap, canonical en Open Graph-URL's)
 - `public/robots.txt` (regel `Sitemap:`)
 
-### 5. Privacyverklaring
+### 4. Privacyverklaring
 
 `src/pages/privacy.astro` beschrijft alleen wat de website nu daadwerkelijk doet. Laat de tekst
 juridisch controleren en aanvullen zodra bekend is welke verwerkers (e-mail-, formulier- of
