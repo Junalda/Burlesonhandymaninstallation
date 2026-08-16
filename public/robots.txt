@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# TODO: pas het domein aan zodra de definitieve URL bekend is
+# (ook in astro.config.mjs — daar wordt de sitemap mee gegenereerd).
+Sitemap: https://burlesonhandymaninstallation.nl/sitemap-index.xml

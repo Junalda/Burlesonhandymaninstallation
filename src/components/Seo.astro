@@ -1,0 +1,48 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Zet op true voor pagina's die niet in de zoekresultaten hoeven. */
+  noindex?: boolean;
+}
+
+const {
+  title = site.seo.title,
+  description = site.seo.description,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const ogImage = new URL(site.seo.ogImage, Astro.site ?? Astro.url.origin).href;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="keywords" content={site.seo.keywords.join(', ')} />
+<meta name="author" content={site.owner} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={site.seo.locale} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${site.name} — grondwerk, transport en machinewerk`} />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<!-- Lokale relevantie -->
+<meta name="geo.region" content="NL-GE" />
+<meta name="geo.placename" content={site.address.city} />

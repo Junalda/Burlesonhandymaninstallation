@@ -1,0 +1,71 @@
+---
+import Icon from './Icon.astro';
+import { benefits } from '../data/benefits';
+import { site } from '../data/site';
+---
+
+<section class="section section--soft" id="waarom" aria-labelledby="waarom-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Werkwijze</p>
+      <h2 class="h2" id="waarom-title">Waarom {site.name}?</h2>
+    </div>
+
+    <ul class="benefits">
+      {
+        benefits.map((benefit, index) => (
+          <li class="benefit reveal" style={`--reveal-delay:${index * 50}ms`}>
+            <span class="benefit__icon">
+              <Icon name={benefit.icon} size={22} />
+            </span>
+            <div>
+              <h3 class="benefit__title">{benefit.title}</h3>
+              <p class="benefit__text">{benefit.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .benefits {
+    display: grid;
+    gap: clamp(1.75rem, 1.2rem + 2vw, 2.75rem) clamp(1.75rem, 1rem + 3vw, 3.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    margin: clamp(2rem, 1.5rem + 2vw, 3.25rem) 0 0;
+  }
+
+  .benefit {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .benefit__icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: 12px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    color: var(--accent-ink);
+  }
+
+  .benefit__title {
+    font-size: 1.06rem;
+    font-weight: 640;
+    letter-spacing: -0.015em;
+    margin-bottom: 0.3rem;
+  }
+
+  .benefit__text {
+    color: var(--ink-muted);
+    font-size: 0.97rem;
+    line-height: 1.6;
+    max-width: 38ch;
+  }
+</style>

@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title={`Pagina niet gevonden | ${site.name}`}
+  description="Deze pagina bestaat niet of is verplaatst."
+  noindex={true}
+>
+  <section class="section notfound">
+    <div class="container notfound__inner">
+      <p class="eyebrow">404</p>
+      <h1 class="h2">Deze pagina bestaat niet</h1>
+      <p class="lead">
+        De pagina is verplaatst of het adres klopt niet. Ga terug naar de startpagina of neem direct
+        contact op.
+      </p>
+      <div class="btn-row notfound__actions">
+        <Button href="/" variant="accent" icon="arrowRight">Naar de startpagina</Button>
+        <Button href="/#contact" variant="outline">Neem contact op</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: grid;
+    place-items: center;
+    min-height: 60vh;
+  }
+
+  .notfound__inner {
+    max-width: 46ch;
+  }
+
+  .notfound h1 {
+    margin-bottom: var(--space-s);
+  }
+
+  .notfound__actions {
+    margin-top: var(--space-l);
+  }
+</style>

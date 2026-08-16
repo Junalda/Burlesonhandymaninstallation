@@ -1,0 +1,175 @@
+---
+import ContactForm from './ContactForm.astro';
+import Icon from './Icon.astro';
+import { site, mailtoLink, whatsappLink, telLink } from '../data/site';
+---
+
+<section class="section section--soft" id="contact" aria-labelledby="contact-title">
+  <div class="container contact">
+    <div class="contact__intro reveal">
+      <p class="eyebrow">Contact</p>
+      <h2 class="h2" id="contact-title">Bespreek uw opdracht</h2>
+      <p class="lead contact__lead">
+        Laat weten om welke werkzaamheden het gaat, waar en wanneer. U ontvangt zo snel mogelijk
+        een reactie.
+      </p>
+
+      <ul class="contact__details">
+        <li>
+          <span class="contact__icon"><Icon name="mail" size={20} /></span>
+          <div>
+            <span class="contact__label">E-mail</span>
+            <a href={mailtoLink} class="contact__value">{site.email}</a>
+          </div>
+        </li>
+
+        {
+          /* Telefoon verschijnt automatisch zodra het nummer bekend is (src/data/site.ts). */
+          telLink && (
+            <li>
+              <span class="contact__icon">
+                <Icon name="phone" size={20} />
+              </span>
+              <div>
+                <span class="contact__label">Telefoon</span>
+                <a href={telLink} class="contact__value">
+                  {site.phone}
+                </a>
+              </div>
+            </li>
+          )
+        }
+
+        {
+          whatsappLink && (
+            <li>
+              <span class="contact__icon">
+                <Icon name="whatsapp" size={20} />
+              </span>
+              <div>
+                <span class="contact__label">WhatsApp</span>
+                <a
+                  href={whatsappLink}
+                  class="contact__value"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Stuur een bericht
+                </a>
+              </div>
+            </li>
+          )
+        }
+
+        <li>
+          <span class="contact__icon"><Icon name="pin" size={20} /></span>
+          <div>
+            <span class="contact__label">Vestiging</span>
+            <address class="contact__value contact__value--static">
+              {site.address.street}<br />
+              {site.address.postalCode}{' '}{site.address.city}
+            </address>
+          </div>
+        </li>
+
+        <li>
+          <span class="contact__icon"><Icon name="building" size={20} /></span>
+          <div>
+            <span class="contact__label">KVK</span>
+            <span class="contact__value contact__value--static">{site.kvk}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="contact__form reveal" style="--reveal-delay:80ms">
+      <ContactForm />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 2.5vw, 4rem);
+    align-items: start;
+  }
+
+  .contact__lead {
+    margin-top: var(--space-s);
+  }
+
+  .contact__details {
+    display: grid;
+    gap: var(--space-m);
+    margin: var(--space-l) 0 0;
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+  }
+
+  .contact__details li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+
+  .contact__icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: none;
+    border-radius: 11px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    color: var(--accent-ink);
+  }
+
+  .contact__label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 620;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.15rem;
+  }
+
+  .contact__value {
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 570;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    word-break: break-word;
+    /* Ruim tikdoel op mobiel. */
+    padding-block: 0.25rem;
+  }
+
+  a.contact__value {
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-strong);
+    transition: border-color 0.2s var(--ease);
+  }
+
+  a.contact__value:hover {
+    border-color: var(--accent);
+  }
+
+  .contact__value--static {
+    font-style: normal;
+    border: 0;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 961px) {
+    .contact {
+      grid-template-columns: 0.85fr 1.15fr;
+    }
+
+    .contact__intro {
+      position: sticky;
+      top: 110px;
+    }
+  }
+</style>

@@ -1,0 +1,109 @@
+---
+import Icon from './Icon.astro';
+import { certificates } from '../data/certificates';
+---
+
+<section class="section section--soft" id="certificaten" aria-labelledby="certificaten-title">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <p class="eyebrow" style="justify-content:center">Certificaten</p>
+      <h2 class="h2" id="certificaten-title">Veilig en professioneel aan het werk</h2>
+      <p class="lead certificates__intro">
+        Veilig en verantwoord werken staat centraal bij iedere opdracht.
+      </p>
+    </div>
+
+    <ul class="grid grid--2 certificates">
+      {
+        certificates.map((certificate, index) => (
+          <li class="card certificate reveal" style={`--reveal-delay:${index * 70}ms`}>
+            {/* Tekstuele badge — bewust geen nagemaakte keurmerklogo's. */}
+            <span class="certificate__badge" aria-hidden="true">
+              {certificate.abbreviation}
+            </span>
+            <div>
+              <h3 class="certificate__title">{certificate.title}</h3>
+              <p class="certificate__text">{certificate.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="certificates__note reveal">
+      <Icon name="shield" size={18} />
+      <span>Werkzaamheden worden uitgevoerd volgens de geldende veiligheidsafspraken op locatie.</span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .certificates__intro {
+    margin-top: var(--space-s);
+    margin-inline: auto;
+  }
+
+  .certificates {
+    margin: clamp(2rem, 1.5rem + 2vw, 3rem) auto 0;
+    max-width: 900px;
+  }
+
+  .certificate {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    background: var(--paper);
+  }
+
+  .certificate__badge {
+    display: grid;
+    place-items: center;
+    width: 74px;
+    height: 74px;
+    flex: none;
+    border-radius: 16px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+    box-shadow: inset 0 -4px 0 0 var(--accent);
+  }
+
+  .certificate__title {
+    font-size: 1.1rem;
+    font-weight: 640;
+    letter-spacing: -0.015em;
+    margin-bottom: 0.35rem;
+  }
+
+  .certificate__text {
+    color: var(--ink-muted);
+    font-size: 0.96rem;
+    line-height: 1.6;
+  }
+
+  .certificates__note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: var(--space-l);
+    color: var(--ink-muted);
+    font-size: 0.94rem;
+    text-align: center;
+  }
+
+  .certificates__note :global(svg) {
+    color: var(--accent);
+    flex: none;
+  }
+
+  @media (max-width: 480px) {
+    .certificate {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  }
+</style>

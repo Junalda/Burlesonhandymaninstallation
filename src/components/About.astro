@@ -1,0 +1,189 @@
+---
+import Icon from './Icon.astro';
+import Button from './Button.astro';
+import { site } from '../data/site';
+
+const facts = [
+  { label: 'Opgericht', value: site.founded },
+  { label: 'Ondernemingsvorm', value: site.legalForm },
+  { label: 'KVK', value: site.kvk },
+  { label: 'Vestiging', value: site.address.city },
+];
+
+/*
+ * PORTRETFOTO TOEVOEGEN
+ * ---------------------
+ * Plaats een foto in `src/assets/raylison.jpg` en vervang het blok
+ * `.about__portrait-placeholder` door:
+ *
+ *   ---
+ *   import { Image } from 'astro:assets';
+ *   import portrait from '../assets/raylison.jpg';
+ *   ---
+ *   <Image
+ *     src={portrait}
+ *     alt="Raylison Burleson, eigenaar van Burleson Handyman Installation"
+ *     widths={[400, 700]}
+ *     sizes="(max-width: 860px) 100vw, 40vw"
+ *     loading="lazy"
+ *     class="about__image"
+ *   />
+ */
+---
+
+<section class="section" id="over-ons" aria-labelledby="over-ons-title">
+  <div class="container about">
+    <div class="about__media reveal">
+      <div class="about__portrait">
+        <div class="about__portrait-placeholder">
+          <Icon name="user" size={40} />
+          <span>Foto van {site.owner}</span>
+        </div>
+      </div>
+      <div class="about__caption">
+        <strong>{site.owner}</strong>
+        <span>Eigenaar &amp; uitvoerend vakman</span>
+      </div>
+    </div>
+
+    <div class="about__body reveal" style="--reveal-delay:80ms">
+      <p class="eyebrow">Over ons</p>
+      <h2 class="h2" id="over-ons-title">De vakman achter het bedrijf</h2>
+
+      <p class="lead about__lead">
+        {site.name} is in {site.founded} opgericht door {site.owner}. Vanuit een praktische en
+        gedisciplineerde werkmentaliteit ondersteunt hij opdrachtgevers bij grondwerk, transport,
+        straatwerk en machinewerk.
+      </p>
+
+      <p class="about__text">
+        Raylison werkt met eigen vervoer en gereedschappen en vindt betrouwbaarheid, punctualiteit
+        en duidelijke afspraken belangrijk.
+      </p>
+
+      <p class="about__text">
+        Of het nu gaat om een enkele opdracht of om ondersteuning bij een groter project: de aanpak
+        blijft hetzelfde — professioneel werken en leveren wat is afgesproken.
+      </p>
+
+      <dl class="about__facts">
+        {
+          facts.map((fact) => (
+            <div>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <Button href="#contact" variant="outline" icon="arrowRight">Neem contact op</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    gap: clamp(2.25rem, 1.5rem + 3vw, 4.5rem);
+    align-items: center;
+  }
+
+  .about__media {
+    position: relative;
+  }
+
+  .about__portrait {
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    background: var(--paper-tint);
+    border: 1px solid var(--line);
+  }
+
+  .about__portrait-placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.75rem;
+    color: var(--ink-muted);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 1rem;
+    background-image:
+      linear-gradient(to right, rgba(22, 23, 26, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(22, 23, 26, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .about__caption {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--accent);
+  }
+
+  .about__caption strong {
+    font-size: 1.05rem;
+    font-weight: 640;
+    letter-spacing: -0.015em;
+  }
+
+  .about__caption span {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+  }
+
+  .about__lead {
+    margin-block: var(--space-s) var(--space-m);
+  }
+
+  .about__text {
+    color: var(--ink-muted);
+    max-width: 58ch;
+  }
+
+  .about__text + .about__text {
+    margin-top: var(--space-s);
+  }
+
+  .about__facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    gap: 1.25rem;
+    margin-block: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--line);
+  }
+
+  .about__facts dt {
+    font-size: 0.78rem;
+    font-weight: 620;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .about__facts dd {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 861px) {
+    .about {
+      grid-template-columns: 0.85fr 1.15fr;
+    }
+
+    .about__media {
+      position: sticky;
+      top: 110px;
+    }
+  }
+</style>

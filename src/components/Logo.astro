@@ -1,0 +1,89 @@
+---
+interface Props {
+  /** 'dark' = donkere tekst op lichte ondergrond. */
+  tone?: 'dark' | 'light';
+  href?: string | null;
+  class?: string;
+}
+
+const { tone = 'dark', href = '/', class: className } = Astro.props;
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag
+  {...href ? { href, 'aria-label': 'Burleson Handyman Installation — naar de startpagina' } : {}}
+  class:list={['logo', `logo--${tone}`, className]}
+>
+  <span class="logo__mark" aria-hidden="true">B</span>
+  <span class="logo__text">
+    <span class="logo__name">Burleson</span>
+    <span class="logo__sub">Handyman Installation</span>
+  </span>
+</Tag>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .logo__mark {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    flex: none;
+    border-radius: 10px;
+    background: var(--ink);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    box-shadow: inset 0 -3px 0 0 var(--accent);
+  }
+
+  .logo--light .logo__mark {
+    background: #fff;
+    color: var(--ink);
+  }
+
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.12;
+  }
+
+  .logo__name {
+    font-size: 1.02rem;
+    font-weight: 680;
+    letter-spacing: -0.015em;
+  }
+
+  .logo__sub {
+    font-size: 0.66rem;
+    font-weight: 560;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .logo--light .logo__sub {
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  @media (max-width: 380px) {
+    .logo__mark {
+      width: 34px;
+      height: 34px;
+      font-size: 1rem;
+    }
+
+    .logo__sub {
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+    }
+  }
+</style>

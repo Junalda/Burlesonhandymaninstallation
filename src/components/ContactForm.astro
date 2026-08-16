@@ -1,0 +1,374 @@
+---
+import Icon from './Icon.astro';
+import { workTypeOptions } from '../data/services';
+import { site } from '../data/site';
+
+/**
+ * Presentatie van het contactformulier.
+ * De verzendlogica staat in `src/scripts/contact-form.ts`.
+ *
+ * `PUBLIC_CONTACT_ENDPOINT` wordt tijdens de build ingelezen. Zolang die niet
+ * is ingesteld, zet het formulier de aanvraag klaar in het e-mailprogramma
+ * van de bezoeker — er wordt geen verzending voorgespiegeld.
+ */
+const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? '';
+---
+
+<div class="form-wrap">
+  <form
+    class="form"
+    data-contact-form
+    data-endpoint={endpoint}
+    data-recipient={site.email}
+    novalidate
+  >
+    <div class="form__grid">
+      <div class="field">
+        <label for="naam">Naam <span aria-hidden="true">*</span></label>
+        <input
+          id="naam"
+          name="naam"
+          type="text"
+          autocomplete="name"
+          required
+          aria-describedby="naam-error"
+        />
+        <p class="field__error" id="naam-error" data-error-for="naam" role="alert" hidden></p>
+      </div>
+
+      <div class="field">
+        <label for="bedrijfsnaam">Bedrijfsnaam</label>
+        <input
+          id="bedrijfsnaam"
+          name="bedrijfsnaam"
+          type="text"
+          autocomplete="organization"
+          aria-describedby="bedrijfsnaam-error"
+        />
+        <p
+          class="field__error"
+          id="bedrijfsnaam-error"
+          data-error-for="bedrijfsnaam"
+          role="alert"
+          hidden
+        >
+        </p>
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail <span aria-hidden="true">*</span></label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          required
+          aria-describedby="email-error"
+        />
+        <p class="field__error" id="email-error" data-error-for="email" role="alert" hidden></p>
+      </div>
+
+      <div class="field">
+        <label for="telefoon">Telefoonnummer</label>
+        <input
+          id="telefoon"
+          name="telefoon"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          aria-describedby="telefoon-error"
+        />
+        <p class="field__error" id="telefoon-error" data-error-for="telefoon" role="alert" hidden>
+        </p>
+      </div>
+
+      <div class="field field--full">
+        <label for="werkzaamheden">Type werkzaamheden <span aria-hidden="true">*</span></label>
+        <div class="select-wrap">
+          <select
+            id="werkzaamheden"
+            name="werkzaamheden"
+            required
+            aria-describedby="werkzaamheden-error"
+          >
+            <option value="">Maak een keuze</option>
+            {workTypeOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+          </select>
+          <Icon name="arrowDown" size={18} class="select-wrap__icon" />
+        </div>
+        <p
+          class="field__error"
+          id="werkzaamheden-error"
+          data-error-for="werkzaamheden"
+          role="alert"
+          hidden
+        >
+        </p>
+      </div>
+
+      <div class="field field--full">
+        <label for="bericht">Bericht <span aria-hidden="true">*</span></label>
+        <textarea
+          id="bericht"
+          name="bericht"
+          rows="5"
+          required
+          placeholder="Omschrijf kort de werkzaamheden, de locatie en de gewenste periode."
+          aria-describedby="bericht-error"></textarea>
+        <p class="field__error" id="bericht-error" data-error-for="bericht" role="alert" hidden></p>
+      </div>
+    </div>
+
+    {/* Honeypot: verborgen voor bezoekers, zichtbaar voor bots. */}
+    <div class="honeypot" aria-hidden="true">
+      <label for="website">Vul dit veld niet in</label>
+      <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" data-honeypot />
+    </div>
+
+    <p class="form__status" data-form-status role="status" aria-live="polite" hidden></p>
+
+    <button type="submit" class="btn btn--accent btn--block form__submit" data-form-submit>
+      <span class="form__submit-label">Verstuur aanvraag</span>
+      <span class="spinner" aria-hidden="true"></span>
+    </button>
+
+    <p class="form__note">
+      Velden met <span aria-hidden="true">*</span><span class="visually-hidden">een sterretje</span>
+      zijn verplicht. Uw gegevens worden alleen gebruikt om op uw aanvraag te reageren.
+    </p>
+  </form>
+
+  <div class="form-success" data-form-success tabindex="-1" hidden>
+    <span class="form-success__icon">
+      <Icon name="check" size={26} />
+    </span>
+    <h3 class="h3">Aanvraag verstuurd</h3>
+    <p>
+      Bedankt voor uw aanvraag. Er wordt zo snel mogelijk contact met u opgenomen. Liever direct
+      contact? Mail naar <a href={`mailto:${site.email}`}>{site.email}</a>.
+    </p>
+  </div>
+</div>
+
+<style>
+  .form-wrap {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    padding: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+    box-shadow: var(--shadow-m);
+  }
+
+  .form__grid {
+    display: grid;
+    gap: var(--space-s);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .field--full {
+    grid-column: 1 / -1;
+  }
+
+  .field label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+
+  .field label span {
+    color: var(--accent-ink);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 0.9rem;
+    background: var(--paper-soft);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-s);
+    font-size: 1rem; /* voorkomt inzoomen op iOS */
+    line-height: 1.5;
+    transition:
+      border-color 0.2s var(--ease),
+      background-color 0.2s var(--ease),
+      box-shadow 0.2s var(--ease);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 130px;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    /* Voldoende contrast (AA) op de lichte invoerachtergrond. */
+    color: var(--ink-muted);
+    opacity: 1;
+  }
+
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--ink-muted);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    background: var(--paper);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(194, 84, 10, 0.14);
+    outline: none;
+  }
+
+  input[aria-invalid='true'],
+  select[aria-invalid='true'],
+  textarea[aria-invalid='true'] {
+    border-color: #b3261e;
+    background: #fdf4f3;
+  }
+
+  .select-wrap {
+    position: relative;
+  }
+
+  select {
+    appearance: none;
+    padding-right: 2.75rem;
+    cursor: pointer;
+  }
+
+  /* `:global()` is nodig omdat het icoon uit het Icon-component komt. */
+  .select-wrap :global(.select-wrap__icon) {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--ink-muted);
+  }
+
+  .field__error {
+    font-size: 0.85rem;
+    font-weight: 550;
+    color: #b3261e;
+  }
+
+  .field__error[hidden] {
+    display: none;
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form__status {
+    margin-top: var(--space-s);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-s);
+    font-size: 0.92rem;
+    font-weight: 550;
+    border: 1px solid var(--line);
+    background: var(--paper-soft);
+  }
+
+  .form__status[hidden] {
+    display: none;
+  }
+
+  .form__status[data-state='error'] {
+    border-color: #f0c4c0;
+    background: #fdf4f3;
+    color: #8c1d18;
+  }
+
+  .form__status[data-state='success'] {
+    border-color: #bfe0c6;
+    background: #f2faf4;
+    color: #1c5c30;
+  }
+
+  .form__status[data-state='info'] {
+    border-color: #f2d3b6;
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+  }
+
+  .form__submit {
+    margin-top: var(--space-m);
+    min-height: 52px;
+  }
+
+  .spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  .form[data-loading='true'] .spinner {
+    display: block;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .form__note {
+    margin-top: var(--space-s);
+    font-size: 0.84rem;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+
+  .form-success {
+    text-align: center;
+    padding: var(--space-m) 0;
+  }
+
+  .form-success[hidden] {
+    display: none;
+  }
+
+  .form-success__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #eaf6ee;
+    color: #1c5c30;
+    margin-bottom: var(--space-s);
+  }
+
+  .form-success p {
+    color: var(--ink-muted);
+    max-width: 44ch;
+    margin: 0.5rem auto 0;
+  }
+</style>
+
+<script>
+  import { initContactForm } from '../scripts/contact-form';
+
+  initContactForm();
+</script>

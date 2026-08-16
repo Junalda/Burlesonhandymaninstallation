@@ -1,0 +1,85 @@
+---
+import Seo from '../components/Seo.astro';
+import StructuredData from '../components/StructuredData.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+}
+
+const { title, description, noindex } = Astro.props;
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#16171a" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <Seo title={title} description={description} noindex={noindex} />
+    <StructuredData />
+
+    <script is:inline>
+      // Zet de animatiemodus vóór de eerste paint aan, zodat er geen flits ontstaat.
+      document.documentElement.classList.add('js-reveal');
+
+      // Veiligheidsnet: laadt het animatiescript onverhoopt niet, dan wordt de
+      // verborgen begintoestand teruggedraaid en blijft alle inhoud zichtbaar.
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          if (!document.documentElement.hasAttribute('data-reveal-ready')) {
+            document.documentElement.classList.remove('js-reveal');
+          }
+        }, 1200);
+      });
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Direct naar de inhoud</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      // Subtiele fade-up wanneer een sectie in beeld komt.
+      // Bewust klein gehouden: geen library, geen layout thrashing.
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+        items.forEach((item) => item.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.08 },
+        );
+
+        items.forEach((item) => observer.observe(item));
+      }
+
+      // Pas melden als alles daadwerkelijk is aangekoppeld: gaat er iets mis,
+      // dan draait het veiligheidsnet in de <head> de verborgen toestand terug.
+      document.documentElement.setAttribute('data-reveal-ready', '');
+    </script>
+  </body>
+</html>

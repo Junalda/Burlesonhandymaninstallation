@@ -1,0 +1,86 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+
+/**
+ * JSON-LD (schema.org) — uitsluitend bevestigde bedrijfsgegevens.
+ * Het KvK-nummer wordt als `identifier` meegegeven; dat is een neutraal,
+ * ondersteund veld en dwingt niets af in niet-passende schema-eigenschappen.
+ */
+const baseUrl = (Astro.site ?? new URL(Astro.url.origin)).href.replace(/\/$/, '');
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': `${baseUrl}/#organisatie`,
+  name: site.name,
+  url: `${baseUrl}/`,
+  email: site.email,
+  description: site.seo.description,
+  foundingDate: site.founded,
+  ...(site.phone ? { telephone: site.phone } : {}),
+  founder: {
+    '@type': 'Person',
+    name: site.owner,
+  },
+  identifier: {
+    '@type': 'PropertyValue',
+    name: 'KVK',
+    value: site.kvk,
+  },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    postalCode: site.address.postalCode,
+    addressLocality: site.address.city,
+    addressRegion: site.address.region,
+    addressCountry: site.address.countryCode,
+  },
+  areaServed: [
+    { '@type': 'City', name: site.address.city },
+    { '@type': 'AdministrativeArea', name: site.address.region },
+    { '@type': 'Country', name: site.address.country },
+  ],
+  knowsAbout: [
+    'Grondwerk',
+    'Kraanwerk',
+    'Shovelwerk',
+    'Straatwerk',
+    'Transport',
+    'Pakketten transport',
+  ],
+  hasCredential: [
+    { '@type': 'EducationalOccupationalCredential', name: 'VCA' },
+    { '@type': 'EducationalOccupationalCredential', name: 'GIB certificaat' },
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Diensten',
+    itemListElement: services.map((service) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: service.title,
+        description: service.description,
+      },
+    })),
+  },
+};
+
+const websiteData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${baseUrl}/#website`,
+  url: `${baseUrl}/`,
+  name: site.name,
+  inLanguage: 'nl-NL',
+  publisher: { '@id': `${baseUrl}/#organisatie` },
+};
+---
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(structuredData)}
+/>
+<script type="application/ld+json" is:inline set:html={JSON.stringify(websiteData)} />

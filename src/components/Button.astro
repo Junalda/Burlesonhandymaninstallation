@@ -1,0 +1,59 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './icons';
+
+type Variant = 'accent' | 'dark' | 'outline' | 'light' | 'ghost-light';
+
+interface Props {
+  /** Rendert als link wanneer `href` is gezet, anders als knop. */
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: Variant;
+  icon?: IconName;
+  iconPosition?: 'start' | 'end';
+  block?: boolean;
+  class?: string;
+  id?: string;
+  'aria-label'?: string;
+  'data-analytics'?: string;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'dark',
+  icon,
+  iconPosition = 'end',
+  block = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = ['btn', `btn--${variant}`, block && 'btn--block', className]
+  .filter(Boolean)
+  .join(' ');
+
+const isExternal = href?.startsWith('http');
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class={classes}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      target={isExternal ? '_blank' : undefined}
+      {...rest}
+    >
+      {icon && iconPosition === 'start' && <Icon name={icon} size={18} />}
+      <slot />
+      {icon && iconPosition === 'end' && <Icon name={icon} size={18} />}
+    </a>
+  ) : (
+    <button type={type} class={classes} {...rest}>
+      {icon && iconPosition === 'start' && <Icon name={icon} size={18} />}
+      <slot />
+      {icon && iconPosition === 'end' && <Icon name={icon} size={18} />}
+    </button>
+  )
+}

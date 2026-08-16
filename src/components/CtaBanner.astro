@@ -1,0 +1,125 @@
+---
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { site, mailtoLink, whatsappLink, telLink } from '../data/site';
+---
+
+<section class="section section--dark cta" aria-labelledby="cta-title">
+  <div class="container cta__inner reveal">
+    <div class="cta__copy">
+      <p class="eyebrow">Beschikbaarheid</p>
+      <h2 class="h2 cta__title" id="cta-title">Een vakman nodig voor uw volgende opdracht?</h2>
+      <p class="lead">
+        Heeft u ondersteuning nodig bij grondwerk, machinewerk, straatwerk of transport? Neem direct
+        contact op en bespreek de mogelijkheden.
+      </p>
+    </div>
+
+    <div class="cta__actions">
+      <Button href="#contact" variant="accent" icon="arrowRight">Neem contact op</Button>
+      <Button href={mailtoLink} variant="ghost-light" icon="mail" iconPosition="start">
+        Stuur een e-mail
+      </Button>
+
+      {
+        /*
+         * WhatsApp- en telefoon-CTA verschijnen automatisch zodra de nummers
+         * in `src/data/site.ts` zijn ingevuld. Er wordt bewust geen nummer
+         * getoond zolang dit niet is bevestigd.
+         */
+        whatsappLink && (
+          <Button href={whatsappLink} variant="light" icon="whatsapp" iconPosition="start">
+            WhatsApp
+          </Button>
+        )
+      }
+      {
+        telLink && (
+          <Button href={telLink} variant="ghost-light" icon="phone" iconPosition="start">
+            {site.phone}
+          </Button>
+        )
+      }
+
+      <p class="cta__email">
+        <Icon name="mail" size={16} />
+        <a href={mailtoLink}>{site.email}</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 70% at 78% 10%, rgba(194, 84, 10, 0.22), transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta__inner {
+    position: relative;
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+    align-items: center;
+  }
+
+  .cta__title {
+    color: #fff;
+    margin-block: var(--space-s);
+    max-width: 18ch;
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .cta__email {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 0.94rem;
+    color: var(--dark-text);
+  }
+
+  .cta__email :global(svg) {
+    color: #f0a267;
+    flex: none;
+  }
+
+  .cta__email a {
+    color: inherit;
+    word-break: break-word;
+    /* Ruim tikdoel op mobiel. */
+    padding-block: 0.35rem;
+  }
+
+  .cta__email a:hover {
+    color: #fff;
+  }
+
+  @media (min-width: 861px) {
+    .cta__inner {
+      grid-template-columns: 1.25fr 0.75fr;
+    }
+
+    .cta__actions {
+      justify-content: flex-end;
+    }
+
+    .cta__email {
+      justify-content: flex-end;
+    }
+  }
+</style>

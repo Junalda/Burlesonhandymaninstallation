@@ -1,0 +1,82 @@
+---
+import Icon from './Icon.astro';
+import { services } from '../data/services';
+---
+
+<section class="section" id="diensten" aria-labelledby="diensten-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Diensten</p>
+      <h2 class="h2" id="diensten-title">Breed inzetbaar. Eén betrouwbare vakman.</h2>
+      <p class="lead services__intro">
+        Ondersteuning op locatie bij grond-, straat- en machinewerk, aangevuld met transport. Voor
+        losse opdrachten, onderaanneming en projectwerk.
+      </p>
+    </div>
+
+    <ul class="grid grid--3 services__grid">
+      {
+        services.map((service, index) => (
+          <li class="card service reveal" style={`--reveal-delay:${index * 60}ms`}>
+            <span class="icon-badge">
+              <Icon name={service.icon} />
+            </span>
+            <h3 class="h3 service__title">{service.title}</h3>
+            <p class="service__text">{service.description}</p>
+            <a class="link-arrow service__link" href={`#contact`} data-service={service.id}>
+              Aanvraag doen
+              <Icon name="arrowRight" size={16} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services__intro {
+    margin-top: var(--space-s);
+  }
+
+  .services__grid {
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+  }
+
+  .service {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .service__title {
+    margin-bottom: 0.5rem;
+  }
+
+  .service__text {
+    color: var(--ink-muted);
+    font-size: 0.98rem;
+    margin-bottom: var(--space-m);
+  }
+
+  .service__link {
+    margin-top: auto;
+    font-size: 0.94rem;
+    align-self: flex-start;
+    /* Ruim tikdoel op mobiel zonder de lay-out te verstoren. */
+    padding-block: 0.4rem;
+  }
+</style>
+
+<script>
+  /**
+   * Klikt iemand op "Aanvraag doen" bij een dienst, dan staat het juiste
+   * type werkzaamheden alvast geselecteerd in het contactformulier.
+   */
+  document.querySelectorAll<HTMLAnchorElement>('[data-service]').forEach((link) => {
+    link.addEventListener('click', () => {
+      const select = document.querySelector<HTMLSelectElement>('#werkzaamheden');
+      const value = link.dataset.service;
+      if (select && value) select.value = value;
+    });
+  });
+</script>
