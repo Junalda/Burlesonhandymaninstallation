@@ -421,23 +421,6 @@ ul {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
 }
 
-/* ---------- Iconen ---------- */
-.icon-badge {
-  display: inline-grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  background: var(--accent-soft);
-  color: var(--accent-ink);
-  margin-bottom: var(--space-s);
-}
-
-.icon-badge svg {
-  width: 24px;
-  height: 24px;
-}
-
 /* ---------- Subtiele scroll-animatie ----------
    De verborgen begintoestand geldt alleen wanneer `.js-reveal` op <html> staat.
    Laadt het animatiescript niet, dan wordt die klasse weer verwijderd en blijft

@@ -1,5 +1,4 @@
 ---
-import Icon from './Icon.astro';
 import { benefits } from '../data/benefits';
 import { site } from '../data/site';
 ---
@@ -15,13 +14,8 @@ import { site } from '../data/site';
       {
         benefits.map((benefit, index) => (
           <li class="benefit reveal" style={`--reveal-delay:${index * 50}ms`}>
-            <span class="benefit__icon">
-              <Icon name={benefit.icon} size={22} />
-            </span>
-            <div>
-              <h3 class="benefit__title">{benefit.title}</h3>
-              <p class="benefit__text">{benefit.description}</p>
-            </div>
+            <h3 class="benefit__title">{benefit.title}</h3>
+            <p class="benefit__text">{benefit.description}</p>
           </li>
         ))
       }
@@ -37,22 +31,15 @@ import { site } from '../data/site';
     margin: clamp(2rem, 1.5rem + 2vw, 3.25rem) 0 0;
   }
 
-  .benefit {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-
-  .benefit__icon {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    flex: none;
-    border-radius: 12px;
-    background: var(--paper);
-    border: 1px solid var(--line);
-    color: var(--accent-ink);
+  /* Zonder icoon draagt de typografie de structuur: een korte accentstreep
+     boven elke titel houdt het raster rustig maar afleesbaar. */
+  .benefit::before {
+    content: '';
+    display: block;
+    width: 26px;
+    height: 2px;
+    margin-bottom: 0.9rem;
+    background: var(--accent);
   }
 
   .benefit__title {

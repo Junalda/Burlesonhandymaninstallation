@@ -18,9 +18,6 @@ import { services } from '../data/services';
       {
         services.map((service, index) => (
           <li class="card service reveal" style={`--reveal-delay:${index * 60}ms`}>
-            <span class="icon-badge">
-              <Icon name={service.icon} />
-            </span>
             <h3 class="h3 service__title">{service.title}</h3>
             <p class="service__text">{service.description}</p>
             <a class="link-arrow service__link" href={`#contact`} data-service={service.id}>
