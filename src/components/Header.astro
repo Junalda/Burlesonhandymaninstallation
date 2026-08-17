@@ -1,0 +1,328 @@
+---
+import Logo from './Logo.astro';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { site, telLink } from '../data/site';
+---
+
+{/* Sentinel: zodra dit element uit beeld scrollt, krijgt de header een achtergrond. */}
+<div id="scroll-sentinel" aria-hidden="true"></div>
+
+<header class="header" id="site-header" data-state="top">
+  <div class="header__inner container">
+    <Logo />
+
+    <nav class="nav" aria-label="Hoofdnavigatie">
+      <ul class="nav__list">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a class="nav__link" href={item.href}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      {
+        /* Belknop verschijnt automatisch zodra PUBLIC_PHONE is ingevuld. */
+        telLink && (
+          <a class="header__call" href={telLink} aria-label="Bel direct">
+            <Icon name="phone" size={20} />
+          </a>
+        )
+      }
+      <Button href="#contact" class="header__cta">Neem contact op</Button>
+
+      <button
+        type="button"
+        class="header__toggle"
+        id="menu-toggle"
+        aria-expanded="false"
+        aria-controls="mobiel-menu"
+      >
+        <span class="visually-hidden">Menu openen</span>
+        <Icon name="menu" size={24} class="header__toggle-icon header__toggle-icon--open" />
+        <Icon name="close" size={24} class="header__toggle-icon header__toggle-icon--close" />
+      </button>
+    </div>
+  </div>
+
+  {/* Mobiel menu — eenvoudig, volledig toetsenbordtoegankelijk. */}
+  <div class="mobile-menu" id="mobiel-menu" hidden>
+    <nav aria-label="Mobiele navigatie">
+      <ul class="mobile-menu__list">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a class="mobile-menu__link" href={item.href} data-menu-close>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <Button href="#contact" block size="lg" icon="arrowRight" data-menu-close>
+      Neem contact op
+    </Button>
+  </div>
+</header>
+
+<style>
+  #scroll-sentinel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: transparent;
+    transition:
+      background-color 260ms var(--ease),
+      box-shadow 260ms var(--ease),
+      border-color 260ms var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+
+  /* Achtergrond verschijnt pas ná het scrollen — rustiger hero. */
+  .header[data-state='scrolled'],
+  .header[data-menu='open'] {
+    background-color: rgba(250, 248, 245, 0.85);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom-color: var(--c-line);
+  }
+
+  @supports not (backdrop-filter: blur(1px)) {
+    .header[data-state='scrolled'],
+    .header[data-menu='open'] {
+      background-color: var(--c-bg);
+    }
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 68px;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 0.5rem + 1.6vw, 2.25rem);
+    margin: 0;
+    list-style: none;
+    padding: 0;
+  }
+
+  .nav__link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--fs-sm);
+    font-weight: 550;
+    color: var(--c-ink-soft);
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    height: 2px;
+    background-color: var(--c-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .nav__link:hover {
+    color: var(--c-ink);
+  }
+
+  .nav__link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .header__call {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    color: var(--c-ink);
+    border: 1px solid var(--c-line-strong);
+    transition:
+      border-color var(--dur) var(--ease),
+      color var(--dur) var(--ease);
+  }
+
+  .header__call:hover {
+    border-color: var(--c-accent);
+    color: var(--c-accent);
+  }
+
+  .header__cta {
+    display: none;
+  }
+
+  .header__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--c-line-strong);
+    border-radius: 12px;
+    color: var(--c-ink);
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .header__toggle:hover {
+    border-color: var(--c-ink);
+  }
+
+  .header__toggle-icon--close {
+    display: none;
+  }
+
+  .header[data-menu='open'] .header__toggle-icon--open {
+    display: none;
+  }
+
+  .header[data-menu='open'] .header__toggle-icon--close {
+    display: block;
+  }
+
+  .mobile-menu {
+    padding: 0.5rem var(--gutter) 1.5rem;
+    border-top: 1px solid var(--c-line);
+    background-color: var(--c-bg);
+  }
+
+  .mobile-menu[hidden] {
+    display: none;
+  }
+
+  .mobile-menu__list {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+  }
+
+  .mobile-menu__link {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    font-size: 1.0625rem;
+    font-weight: 550;
+    text-decoration: none;
+    color: var(--c-ink);
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  /* Vanaf tablet: volledige navigatie, geen hamburger. */
+  @media (min-width: 56rem) {
+    .header__inner {
+      min-height: 76px;
+    }
+
+    .nav,
+    .header__cta {
+      display: block;
+    }
+
+    .header__toggle {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: none !important;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Header-gedrag: achtergrond na scrollen + mobiel menu.
+   * Geen scroll-listener: een IntersectionObserver op een sentinel is
+   * goedkoper en veroorzaakt geen layout thrashing.
+   */
+  const header = document.getElementById('site-header');
+  const sentinel = document.getElementById('scroll-sentinel');
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobiel-menu');
+
+  if (header && sentinel) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        header.dataset.state = entry && entry.isIntersecting ? 'top' : 'scrolled';
+      },
+      { threshold: 0 },
+    );
+    observer.observe(sentinel);
+  }
+
+  if (header && toggle && menu) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+      header.dataset.menu = open ? 'open' : 'closed';
+      const label = toggle.querySelector('.visually-hidden');
+      if (label) label.textContent = open ? 'Menu sluiten' : 'Menu openen';
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Sluiten na het kiezen van een ankerlink.
+    for (const link of menu.querySelectorAll('[data-menu-close]')) {
+      link.addEventListener('click', () => setOpen(false));
+    }
+
+    // Sluiten met Escape.
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        (toggle as HTMLButtonElement).focus();
+      }
+    });
+
+    // Sluiten wanneer het scherm breed genoeg wordt voor de desktopnavigatie.
+    const desktop = window.matchMedia('(min-width: 56rem)');
+    desktop.addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+</script>

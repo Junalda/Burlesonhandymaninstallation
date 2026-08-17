@@ -1,0 +1,95 @@
+---
+import SEO from '../components/SEO.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  includeStructuredData?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title = site.seo.title,
+  description = site.seo.description,
+  path = '/',
+  includeStructuredData = false,
+  noindex = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={site.seo.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#14161a" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <SEO
+      title={title}
+      description={description}
+      path={path}
+      includeStructuredData={includeStructuredData}
+      noindex={noindex}
+    />
+
+    {/*
+      Zet direct de `js`-class op <html>. Zo weten de scroll-animaties dat er
+      JavaScript is; zonder JS blijft alle content gewoon zichtbaar.
+      Inline en zonder render-blokkade → geen invloed op de LCP.
+    */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#hoofdinhoud">Direct naar de inhoud</a>
+
+    <Header />
+
+    <main id="hoofdinhoud">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Subtiele fade-up bij het in beeld komen van secties.
+      import '../scripts/reveal';
+    </script>
+
+    <style>
+      .skip-link {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -120%);
+        z-index: 200;
+        padding: 0.75rem 1.25rem;
+        background-color: var(--c-ink);
+        color: #fff;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        border-radius: 0 0 var(--radius) var(--radius);
+        text-decoration: none;
+        transition: transform 160ms var(--ease);
+      }
+
+      .skip-link:focus-visible {
+        transform: translate(-50%, 0);
+      }
+    </style>
+  </body>
+</html>

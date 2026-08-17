@@ -1,0 +1,124 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+import { certificates } from '../data/certificates';
+---
+
+<section class="section section--surface" id="certificaten" aria-labelledby="certificaten-titel">
+  <div class="container">
+    <SectionHeading
+      eyebrow="Certificaten"
+      id="certificaten-titel"
+      title="Veilig en professioneel aan het werk"
+      intro="Veilig en verantwoord werken staat centraal bij iedere opdracht."
+      align="center"
+    />
+
+    <ul class="certificates">
+      {
+        certificates.map((certificate, index) => (
+          <li
+            class="certificate"
+            data-reveal
+            style={`--reveal-delay: ${index * 90}ms`}
+          >
+            {/* Tekstuele badge — bewust geen nagemaakt certificaatlogo. */}
+            <span class="certificate__badge" aria-hidden="true">
+              {certificate.abbr}
+            </span>
+            <div class="certificate__body">
+              <h3 class="certificate__title">
+                <Icon name="checkCircle" size={18} strokeWidth={1.8} />
+                {certificate.title}
+              </h3>
+              <p class="certificate__text">{certificate.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="certificates__note" data-reveal>
+      Werkzaamheden worden uitgevoerd met eigen gereedschap en eigen vervoer, volgens de
+      veiligheidsafspraken die op de locatie gelden.
+    </p>
+  </div>
+</section>
+
+<style>
+  .certificates {
+    display: grid;
+    gap: clamp(1rem, 0.7rem + 1.2vw, 1.5rem);
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 880px;
+  }
+
+  .certificate {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+    padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    background-color: var(--c-bg);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-lg);
+    transition:
+      transform var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+
+  .certificate:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+
+  .certificate__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 78px;
+    height: 78px;
+    flex: none;
+    border-radius: 16px;
+    background-color: var(--c-ink);
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: inset 0 -3px 0 var(--c-accent);
+  }
+
+  .certificate__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-h3);
+    margin-bottom: 0.35rem;
+  }
+
+  .certificate__title :global(svg) {
+    color: var(--c-accent);
+    flex: none;
+  }
+
+  .certificate__text {
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+  }
+
+  .certificates__note {
+    max-width: 60ch;
+    margin: clamp(2rem, 1.5rem + 2vw, 3rem) auto 0;
+    text-align: center;
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+
+  @media (min-width: 60rem) {
+    .certificates {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,75 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+import { benefits } from '../data/benefits';
+---
+
+<section class="section" id="waarom" aria-labelledby="waarom-titel">
+  <div class="container">
+    <SectionHeading
+      eyebrow="Werkwijze"
+      id="waarom-titel"
+      title={`Waarom ${site.name}?`}
+      intro="Een praktische instelling, duidelijke communicatie en werk dat gewoon klopt."
+    />
+
+    <ul class="grid grid--3 benefits">
+      {
+        benefits.map((benefit, index) => (
+          <li class="benefit" data-reveal style={`--reveal-delay: ${Math.min(index, 3) * 70}ms`}>
+            <span class="benefit__icon">
+              <Icon name={benefit.icon} size={22} />
+            </span>
+            <div>
+              <h3 class="benefit__title">{benefit.title}</h3>
+              <p class="benefit__text">{benefit.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: clamp(1.75rem, 1.2rem + 2vw, 2.75rem) clamp(1.5rem, 1rem + 2vw, 3rem);
+  }
+
+  .benefit {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .benefit__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: 12px;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    color: var(--c-accent);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .benefit__title {
+    font-size: 1.0625rem;
+    font-weight: 650;
+    margin-bottom: 0.35rem;
+  }
+
+  .benefit__text {
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    max-width: 38ch;
+  }
+</style>

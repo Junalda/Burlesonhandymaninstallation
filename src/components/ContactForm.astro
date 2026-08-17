@@ -1,0 +1,386 @@
+---
+import Icon from './Icon.astro';
+import { werkzaamhedenOpties } from '../data/services';
+
+/**
+ * Contactformulier — uitsluitend presentatie.
+ *
+ * Alle logica (validatie, verzenden, laad- en succestoestand) staat in
+ * `src/scripts/contact-form.ts`. Dit bestand bevat geen gedrag, zodat markup en
+ * logica los van elkaar aangepast kunnen worden.
+ *
+ * Zie `.env.example` → PUBLIC_CONTACT_ENDPOINT voor de backend-koppeling.
+ */
+
+interface Field {
+  id: string;
+  label: string;
+  type: 'text' | 'email' | 'tel';
+  autocomplete: string;
+  required: boolean;
+  /** Half of volledige breedte in het raster. */
+  span?: 'half' | 'full';
+  hint?: string;
+}
+
+const fields: Field[] = [
+  { id: 'naam', label: 'Naam', type: 'text', autocomplete: 'name', required: true, span: 'half' },
+  {
+    id: 'bedrijfsnaam',
+    label: 'Bedrijfsnaam',
+    type: 'text',
+    autocomplete: 'organization',
+    required: false,
+    span: 'half',
+    hint: 'Optioneel',
+  },
+  {
+    id: 'email',
+    label: 'E-mail',
+    type: 'email',
+    autocomplete: 'email',
+    required: true,
+    span: 'half',
+  },
+  {
+    id: 'telefoon',
+    label: 'Telefoonnummer',
+    type: 'tel',
+    autocomplete: 'tel',
+    required: false,
+    span: 'half',
+    hint: 'Optioneel',
+  },
+];
+---
+
+<form class="form" id="contact-form" novalidate data-state="idle">
+  <div class="form__grid">
+    {
+      fields.map((field) => (
+        <div class:list={['field', field.span === 'half' && 'field--half']}>
+          <label class="field__label" for={field.id}>
+            {field.label}
+            {field.hint && <span class="field__hint">{field.hint}</span>}
+          </label>
+          <input
+            class="field__input"
+            id={field.id}
+            name={field.id}
+            type={field.type}
+            autocomplete={field.autocomplete}
+            required={field.required}
+            aria-describedby={`${field.id}-error`}
+          />
+          <p class="field__error" id={`${field.id}-error`} role="alert" />
+        </div>
+      ))
+    }
+
+    <div class="field">
+      <label class="field__label" for="type">Type werkzaamheden</label>
+      <div class="field__select-wrap">
+        <select class="field__input field__select" id="type" name="type" required aria-describedby="type-error">
+          <option value="" selected disabled>Maak een keuze</option>
+          {werkzaamhedenOpties.map((optie) => <option value={optie.value}>{optie.label}</option>)}
+        </select>
+        <Icon name="arrowDown" size={18} class="field__select-icon" />
+      </div>
+      <p class="field__error" id="type-error" role="alert"></p>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="bericht">
+        Bericht
+        <span class="field__hint">Waar, wanneer en wat voor werk?</span>
+      </label>
+      <textarea
+        class="field__input field__textarea"
+        id="bericht"
+        name="bericht"
+        rows="5"
+        required
+        aria-describedby="bericht-error"></textarea>
+      <p class="field__error" id="bericht-error" role="alert"></p>
+    </div>
+
+    {/*
+      Honeypot tegen spam: onzichtbaar voor bezoekers, wél invulbaar voor bots.
+      Wordt uit de tabvolgorde en uit de toegankelijkheidsboom gehouden.
+    */}
+    <div class="form__honeypot" aria-hidden="true">
+      <label for="website">Vul dit veld niet in</label>
+      <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+  </div>
+
+  <div class="form__footer">
+    <button type="submit" class="btn btn--lg form__submit" id="contact-submit">
+      <span class="form__submit-label">Verstuur aanvraag</span>
+      <Icon name="spinner" size={18} class="form__spinner" />
+    </button>
+    <p class="form__legal">
+      Uw gegevens worden alleen gebruikt om op deze aanvraag te reageren.
+    </p>
+  </div>
+
+  {/* Statusmelding — wordt door het script gevuld. */}
+  <div class="form__status" id="contact-status" role="status" aria-live="polite" hidden>
+    <Icon name="checkCircle" size={20} class="form__status-icon form__status-icon--success" />
+    <Icon name="alert" size={20} class="form__status-icon form__status-icon--error" />
+    <div class="form__status-body">
+      <p class="form__status-title" id="contact-status-title"></p>
+      <p class="form__status-text" id="contact-status-text"></p>
+    </div>
+  </div>
+</form>
+
+<script>
+  // Verzendlogica staat bewust apart van de markup.
+  import '../scripts/contact-form';
+</script>
+
+<style>
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .form__grid {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .field__label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    letter-spacing: -0.008em;
+  }
+
+  .field__hint {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: var(--c-muted);
+  }
+
+  .field__input {
+    width: 100%;
+    /* 50px hoog → ruim boven de 44px-richtlijn voor tikdoelen. */
+    min-height: 50px;
+    padding: 0.7rem 0.95rem;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-sm);
+    font-size: 1rem; /* voorkomt inzoomen op iOS */
+    color: var(--c-ink);
+    transition:
+      border-color var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+
+  .field__input::placeholder {
+    color: #9aa0a8;
+  }
+
+  .field__input:hover {
+    border-color: var(--c-muted);
+  }
+
+  .field__input:focus {
+    outline: none;
+    border-color: var(--c-accent);
+    box-shadow: 0 0 0 3px rgba(194, 65, 12, 0.16);
+  }
+
+  .field__input[aria-invalid='true'] {
+    border-color: var(--c-error);
+    background-color: var(--c-error-tint);
+  }
+
+  .field__textarea {
+    resize: vertical;
+    min-height: 128px;
+    line-height: 1.6;
+  }
+
+  .field__select-wrap {
+    position: relative;
+  }
+
+  .field__select {
+    appearance: none;
+    padding-right: 2.75rem;
+    cursor: pointer;
+  }
+
+  .field__select:invalid {
+    color: #9aa0a8;
+  }
+
+  .field__select-icon {
+    position: absolute;
+    right: 0.95rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--c-muted);
+  }
+
+  .field__error {
+    display: none;
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: var(--c-error);
+  }
+
+  .field__error:not(:empty) {
+    display: block;
+  }
+
+  .form__honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+  }
+
+  .form__submit {
+    min-width: 15rem;
+  }
+
+  .form__legal {
+    font-size: var(--fs-xs);
+    color: var(--c-muted);
+    max-width: 34ch;
+  }
+
+  /* Laadtoestand */
+  .form__spinner {
+    display: none;
+    animation: form-spin 800ms linear infinite;
+  }
+
+  .form[data-state='submitting'] .form__spinner {
+    display: block;
+  }
+
+  .form[data-state='submitting'] .form__submit {
+    opacity: 0.75;
+    pointer-events: none;
+  }
+
+  @keyframes form-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .form__spinner {
+      animation-duration: 1600ms;
+    }
+  }
+
+  /* Statusmelding */
+  .form__status {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.15rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--c-line);
+    background-color: var(--c-bg);
+  }
+
+  .form__status[hidden] {
+    display: none;
+  }
+
+  .form__status-icon {
+    flex: none;
+    margin-top: 0.15rem;
+    display: none;
+  }
+
+  .form__status[data-tone='success'] {
+    border-color: #a6f4c5;
+    background-color: var(--c-success-tint);
+  }
+
+  .form__status[data-tone='success'] .form__status-icon--success {
+    display: block;
+    color: var(--c-success);
+  }
+
+  .form__status[data-tone='error'],
+  .form__status[data-tone='info'] {
+    border-color: #fda29b;
+    background-color: var(--c-error-tint);
+  }
+
+  .form__status[data-tone='info'] {
+    border-color: var(--c-line-strong);
+    background-color: var(--c-bg-warm);
+  }
+
+  .form__status[data-tone='error'] .form__status-icon--error,
+  .form__status[data-tone='info'] .form__status-icon--error {
+    display: block;
+    color: var(--c-error);
+  }
+
+  .form__status[data-tone='info'] .form__status-icon--error {
+    color: var(--c-ink-soft);
+  }
+
+  .form__status-title {
+    font-weight: 650;
+    font-size: var(--fs-sm);
+  }
+
+  .form__status-text {
+    font-size: var(--fs-sm);
+    color: var(--c-ink-soft);
+    margin-top: 0.15rem;
+  }
+
+  .form__status-text :global(a) {
+    color: inherit;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 40rem) {
+    .form__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field {
+      grid-column: 1 / -1;
+    }
+
+    .field--half {
+      grid-column: span 1;
+    }
+  }
+</style>

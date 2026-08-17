@@ -1,0 +1,67 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './icons';
+
+type Variant = 'primary' | 'secondary' | 'ink' | 'onDark';
+
+interface Props {
+  /** Wordt een <a> als `href` is meegegeven, anders een <button>. */
+  href?: string;
+  type?: 'button' | 'submit';
+  variant?: Variant;
+  size?: 'md' | 'lg';
+  /** Vult de volledige breedte — handig op mobiel. */
+  block?: boolean;
+  icon?: IconName;
+  iconPosition?: 'start' | 'end';
+  /** Voor externe links (opent in een nieuw tabblad). */
+  external?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  block = false,
+  icon,
+  iconPosition = 'end',
+  external = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const classes = [
+  'btn',
+  variant !== 'primary' && `btn--${variant}`,
+  size === 'lg' && 'btn--lg',
+  block && 'btn--block',
+  className,
+]
+  .filter(Boolean)
+  .join(' ');
+
+const iconClass = ['btn__icon', icon === 'arrowRight' && 'btn__icon--arrow']
+  .filter(Boolean)
+  .join(' ');
+
+const externalAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+{
+  href ? (
+    <a href={href} class={classes} {...externalAttrs} {...rest}>
+      {icon && iconPosition === 'start' && <Icon name={icon} size={18} class={iconClass} />}
+      <span><slot /></span>
+      {icon && iconPosition === 'end' && <Icon name={icon} size={18} class={iconClass} />}
+    </a>
+  ) : (
+    <button type={type} class={classes} {...rest}>
+      {icon && iconPosition === 'start' && <Icon name={icon} size={18} class={iconClass} />}
+      <span><slot /></span>
+      {icon && iconPosition === 'end' && <Icon name={icon} size={18} class={iconClass} />}
+    </button>
+  )
+}

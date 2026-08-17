@@ -1,0 +1,73 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import Icon from './Icon.astro';
+import Button from './Button.astro';
+import { services } from '../data/services';
+---
+
+<section class="section section--surface" id="diensten" aria-labelledby="diensten-titel">
+  <div class="container">
+    <SectionHeading
+      eyebrow="Diensten"
+      id="diensten-titel"
+      title="Breed inzetbaar. Eén betrouwbare vakman."
+      intro="Van voorbereidend grondwerk tot machinewerk en transport. Eén aanspreekpunt, duidelijke afspraken en werk dat afgemaakt wordt."
+    />
+
+    <ul class="grid grid--3 services__list">
+      {
+        services.map((service, index) => (
+          <li data-reveal style={`--reveal-delay: ${Math.min(index, 3) * 70}ms`}>
+            <article class="card service">
+              <span class="icon-tile">
+                <Icon name={service.icon} size={24} />
+              </span>
+              <h3 class="card__title">{service.title}</h3>
+              <p class="card__text">{service.description}</p>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="services__footer" data-reveal>
+      <p class="services__note">
+        Staat uw werkzaamheid er niet tussen? Neem gerust contact op — meedenken kan altijd.
+      </p>
+      <Button href="#contact" variant="ink" icon="arrowRight">Bespreek uw opdracht</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .services__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .services__list > li {
+    display: flex;
+  }
+
+  .service {
+    width: 100%;
+  }
+
+  .services__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    padding-top: clamp(1.75rem, 1.5rem + 1vw, 2.25rem);
+    border-top: 1px solid var(--c-line);
+  }
+
+  .services__note {
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+    max-width: 48ch;
+  }
+</style>

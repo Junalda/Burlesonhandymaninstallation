@@ -1,0 +1,108 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  /** 'dark' = donkere tekst (lichte achtergrond), 'light' = witte tekst. */
+  tone?: 'dark' | 'light';
+  href?: string;
+  class?: string;
+}
+
+const { tone = 'dark', href = '#top', class: className } = Astro.props;
+
+/**
+ * Tekstueel wordmerk met een klein geometrisch beeldmerk.
+ * TODO (logo): is er later een officieel logo, vervang dan het <span class="logo__mark">
+ * blok door een <Image> uit `src/assets/`.
+ */
+---
+
+<a
+  href={href}
+  class:list={['logo', tone === 'light' && 'logo--light', className]}
+  aria-label={`${site.name} — naar boven`}
+>
+  <span class="logo__mark" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+      <path d="M4 19h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path>
+      <path
+        d="M7 15.5 12 5l5 10.5"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+    </svg>
+  </span>
+  <span class="logo__text">
+    <span class="logo__name">Burleson</span>
+    <span class="logo__sub">Handyman Installation</span>
+  </span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: var(--c-ink);
+    min-height: 44px;
+  }
+
+  .logo__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background-color: var(--c-ink);
+    color: var(--c-accent-bright);
+    flex: none;
+    transition: background-color var(--dur) var(--ease);
+  }
+
+  .logo:hover .logo__mark {
+    background-color: var(--c-accent);
+    color: #fff;
+  }
+
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.12;
+  }
+
+  .logo__name {
+    font-size: 1.0625rem;
+    font-weight: 680;
+    letter-spacing: -0.025em;
+  }
+
+  .logo__sub {
+    font-size: 0.6875rem;
+    font-weight: 550;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  .logo--light {
+    color: #fff;
+  }
+
+  .logo--light .logo__mark {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--c-accent-bright);
+  }
+
+  .logo--light .logo__sub {
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  @media (max-width: 22rem) {
+    .logo__sub {
+      display: none;
+    }
+  }
+</style>

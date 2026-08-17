@@ -1,0 +1,20 @@
+{
+  "name": "burleson-handyman-installation",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "One-page website voor Burleson Handyman Installation — grondwerk, transport en machinewerk vanuit Aalten.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/sitemap": "^3.2.1",
+    "astro": "^5.1.1",
+    "typescript": "^5.7.2"
+  }
+}

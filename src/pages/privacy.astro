@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, mailtoLink, addressOneLine } from '../data/site';
+
+/**
+ * Privacyverklaring.
+ *
+ * De tekst beschrijft uitsluitend wat deze website daadwerkelijk doet:
+ * er staan geen analytics, cookies of trackers op.
+ *
+ * TODO (juridisch): laat deze tekst controleren zodra er analytics,
+ * cookies of een externe formulierdienst aan de website worden toegevoegd.
+ */
+
+const bijgewerkt = '17 augustus 2026';
+---
+
+<BaseLayout
+  title={`Privacyverklaring | ${site.name}`}
+  description={`Privacyverklaring van ${site.name}: welke gegevens worden verwerkt via het contactformulier en waarvoor.`}
+  path="/privacy/"
+>
+  <article class="section">
+    <div class="container container--narrow legal">
+      <p class="eyebrow">Privacy</p>
+      <h1 class="legal__title">Privacyverklaring</h1>
+      <p class="legal__meta">Laatst bijgewerkt: {bijgewerkt}</p>
+
+      <h2>Wie verwerkt uw gegevens?</h2>
+      <p>
+        {site.name} ({site.legalForm}, KVK {site.kvk}), gevestigd aan {addressOneLine}, is
+        verantwoordelijk voor de verwerking van persoonsgegevens zoals beschreven in deze
+        verklaring. Contact: <a href={mailtoLink}>{site.contact.email}</a>.
+      </p>
+
+      <h2>Welke gegevens worden verwerkt?</h2>
+      <p>
+        Wanneer u het contactformulier gebruikt of een e-mail stuurt, worden de gegevens verwerkt
+        die u zelf invult: naam, eventueel bedrijfsnaam, e-mailadres, eventueel telefoonnummer, het
+        gekozen type werkzaamheden en de inhoud van uw bericht.
+      </p>
+
+      <h2>Waarvoor worden ze gebruikt?</h2>
+      <p>
+        Uitsluitend om uw aanvraag te beantwoorden en de eventuele opdracht te bespreken en uit te
+        voeren. Uw gegevens worden niet verkocht en niet gebruikt voor reclame.
+      </p>
+
+      <h2>Bewaartermijn</h2>
+      <p>
+        Aanvragen worden niet langer bewaard dan nodig is voor de afhandeling en de eventuele
+        opdracht, en voor zover de wet een langere bewaartermijn voorschrijft (bijvoorbeeld voor de
+        administratie).
+      </p>
+
+      <h2>Cookies en statistieken</h2>
+      <p>
+        Deze website plaatst geen tracking- of marketingcookies en gebruikt geen
+        bezoekersstatistieken. Er worden geen externe lettertypen of scripts van derden geladen.
+      </p>
+
+      <h2>Uw rechten</h2>
+      <p>
+        U kunt vragen om inzage in, correctie van of verwijdering van uw gegevens. Stuur daarvoor
+        een bericht naar <a href={mailtoLink}>{site.contact.email}</a>. U heeft daarnaast het recht
+        een klacht in te dienen bij de Autoriteit Persoonsgegevens.
+      </p>
+
+      <p class="legal__back">
+        <a href="/">&larr; Terug naar de homepage</a>
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .legal {
+    padding-top: 1rem;
+  }
+
+  .legal__title {
+    font-size: var(--fs-h2);
+  }
+
+  .legal__meta {
+    margin-top: 0.75rem;
+    color: var(--c-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .legal h2 {
+    margin-top: 2.5rem;
+    font-size: var(--fs-h3);
+  }
+
+  .legal p {
+    margin-top: 0.85rem;
+    color: var(--c-ink-soft);
+    max-width: 68ch;
+  }
+
+  .legal a {
+    color: var(--c-accent);
+    font-weight: 550;
+    overflow-wrap: anywhere;
+  }
+
+  .legal__back {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--c-line);
+  }
+</style>

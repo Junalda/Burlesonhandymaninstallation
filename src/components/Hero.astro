@@ -1,0 +1,308 @@
+---
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { site, whatsappLink } from '../data/site';
+
+/**
+ * Hero.
+ *
+ * TODO (hero-afbeelding): er is nog geen beeldmateriaal aangeleverd. De hero is
+ * daarom opgebouwd zonder foto en staat visueel op zichzelf.
+ * Zodra er een foto is (grondwerk, machine op locatie, infrastructuur):
+ *   1. plaats het bestand in `src/assets/hero.jpg`
+ *   2. voeg bovenaan toe:  import { Image } from 'astro:assets';
+ *                          import heroImage from '../assets/hero.jpg';
+ *   3. vervang het blok `<div class="hero__composition">` door:
+ *      <Image src={heroImage} alt="Grondwerkzaamheden op locatie" widths={[560, 840, 1200]}
+ *             sizes="(min-width: 60rem) 44vw, 100vw" loading="eager" fetchpriority="high"
+ *             class="hero__image" />
+ * Gebruik geen goedkope stockfoto's — liever geen beeld dan het verkeerde beeld.
+ */
+
+const trustIndicators = ['Eigen vervoer', 'Eigen gereedschap', 'VCA gecertificeerd'];
+---
+
+<section class="hero" id="top">
+  <div class="hero__bg" aria-hidden="true"></div>
+
+  <div class="container hero__inner">
+    <div class="hero__content">
+      <p class="hero__eyebrow" data-reveal>Grondwerk · Transport · Machinewerk</p>
+
+      <h1 class="hero__title" data-reveal style="--reveal-delay: 60ms">
+        Vakwerk. Op tijd.<br />
+        <span class="hero__title-accent">Afspraak is afspraak.</span>
+      </h1>
+
+      <p class="hero__subtitle" data-reveal style="--reveal-delay: 120ms">
+        Grondwerk, transport en machinewerk waarop u kunt rekenen.
+      </p>
+
+      <p class="hero__lead" data-reveal style="--reveal-delay: 160ms">
+        {site.name} ondersteunt bedrijven en projecten met professioneel grondwerk, transport en
+        machinewerk. Met eigen vervoer, eigen gereedschappen en een betrouwbare werkmentaliteit
+        staat {site.owner.split(' ')[0]} klaar om opdrachten efficiënt en zorgvuldig uit te voeren.
+      </p>
+
+      <div class="hero__actions" data-reveal style="--reveal-delay: 200ms">
+        <Button href="#contact" size="lg" icon="arrowRight">Bespreek uw opdracht</Button>
+        <Button href="#diensten" size="lg" variant="secondary">Bekijk diensten</Button>
+        {
+          /*
+            WhatsApp-knop verschijnt automatisch zodra PUBLIC_WHATSAPP is ingevuld.
+            Zie .env.example en src/data/site.ts.
+          */
+          whatsappLink && (
+            <Button href={whatsappLink} size="lg" variant="secondary" icon="whatsapp" iconPosition="start" external>
+              WhatsApp
+            </Button>
+          )
+        }
+      </div>
+
+      <ul class="hero__trust" data-reveal style="--reveal-delay: 240ms">
+        {
+          trustIndicators.map((item) => (
+            <li class="hero__trust-item">
+              <Icon name="check" size={17} strokeWidth={2.2} />
+              <span>{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="hero__visual" data-reveal style="--reveal-delay: 140ms">
+      {/* Abstracte compositie: grondlagen + machinelijn. Vervangbaar door een foto. */}
+      <div class="hero__composition" aria-hidden="true">
+        <span class="hero__strata hero__strata--1"></span>
+        <span class="hero__strata hero__strata--2"></span>
+        <span class="hero__strata hero__strata--3"></span>
+        <svg
+          class="hero__glyph"
+          viewBox="0 0 200 200"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          {/* Machine op maaiveld — lijnwerk, geen nagemaakte fotografie. */}
+          <path d="M18 172h164" opacity="0.45"></path>
+          <rect x="30" y="140" width="86" height="24" rx="12"></rect>
+          <rect x="44" y="100" width="62" height="40" rx="7"></rect>
+          <path d="M56 110h22v18H56z" opacity="0.6"></path>
+          <path d="M104 116 138 74l30 30"></path>
+          <path d="M154 104h26v14a12 12 0 0 1-12 12h-14z"></path>
+        </svg>
+      </div>
+
+      <div class="hero__facts">
+        <div class="hero__fact">
+          <span class="hero__fact-label">Vestiging</span>
+          <span class="hero__fact-value">{site.address.city}, {site.address.region}</span>
+        </div>
+        <div class="hero__fact">
+          <span class="hero__fact-label">Opgericht</span>
+          <span class="hero__fact-value">{site.founded}</span>
+        </div>
+        <div class="hero__fact">
+          <span class="hero__fact-label">KVK</span>
+          <span class="hero__fact-value">{site.kvk}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    /* Compenseert de sticky header, zonder een lege gapende ruimte op mobiel. */
+    padding-block: clamp(3rem, 1.5rem + 6vw, 6.5rem) clamp(3.5rem, 2rem + 6vw, 7rem);
+    overflow: hidden;
+  }
+
+  /* Zeer subtiel warm verloop — geeft diepte zonder op te vallen. */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 88% 8%, rgba(194, 65, 12, 0.07), transparent 62%),
+      linear-gradient(180deg, var(--c-surface) 0%, var(--c-bg) 100%);
+    z-index: -1;
+  }
+
+  .hero__inner {
+    display: grid;
+    gap: clamp(2.5rem, 1.5rem + 4vw, 4rem);
+    align-items: center;
+  }
+
+  .hero__eyebrow {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero__title {
+    font-size: var(--fs-display);
+    font-weight: 700;
+    letter-spacing: -0.038em;
+    line-height: 1.02;
+  }
+
+  .hero__title-accent {
+    color: var(--c-muted);
+    font-weight: 600;
+  }
+
+  .hero__subtitle {
+    margin-top: 1.5rem;
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    letter-spacing: -0.018em;
+    color: var(--c-ink);
+    max-width: 34ch;
+  }
+
+  .hero__lead {
+    margin-top: 1rem;
+    color: var(--c-muted);
+    max-width: 52ch;
+    font-size: 1.0625rem;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  .hero__trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.75rem;
+    margin: 2.25rem 0 0;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--c-line);
+    list-style: none;
+  }
+
+  .hero__trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--fs-sm);
+    font-weight: 550;
+    color: var(--c-ink-soft);
+  }
+
+  .hero__trust-item :global(svg) {
+    color: var(--c-accent);
+    flex: none;
+  }
+
+  /* --- Visueel blok ------------------------------------------------------ */
+  .hero__visual {
+    position: relative;
+    /* Op mobiel eerst de boodschap, daarna pas het beeld. */
+    order: 2;
+  }
+
+  .hero__composition {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, #1b1e24 0%, #101216 60%, #16181d 100%);
+    color: var(--c-accent-bright);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .hero__strata {
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .hero__strata--1 {
+    top: 32%;
+  }
+  .hero__strata--2 {
+    top: 55%;
+  }
+  .hero__strata--3 {
+    top: 78%;
+    background-color: rgba(245, 158, 11, 0.28);
+  }
+
+  .hero__glyph {
+    position: relative;
+    width: 62%;
+    max-width: 260px;
+    height: auto;
+  }
+
+  /* Feitenkaart schuift bewust over de onderrand van het beeldvlak heen. */
+  .hero__facts {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(94px, 1fr));
+    gap: 0.75rem 0.5rem;
+    margin: -2.25rem clamp(0.75rem, 3vw, 2rem) 0;
+    padding: 1.1rem 1.25rem;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .hero__fact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .hero__fact-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  .hero__fact-value {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__inner {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: clamp(3rem, 1rem + 5vw, 5rem);
+    }
+
+    .hero__content {
+      order: 1;
+    }
+
+    .hero__facts {
+      box-shadow: var(--shadow-lg);
+    }
+  }
+</style>

@@ -1,0 +1,142 @@
+---
+import Logo from './Logo.astro';
+import { site, mailtoLink, addressOneLine } from '../data/site';
+
+const footerLinks = [
+  { label: 'Diensten', href: '/#diensten' },
+  { label: 'Over ons', href: '/#over-ons' },
+  { label: 'Contact', href: '/#contact' },
+  { label: 'Privacy', href: '/privacy/' },
+];
+
+const jaar = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <Logo tone="light" href="/#top" />
+      <p class="footer__tagline">Grondwerk · Transport · Machinewerk</p>
+    </div>
+
+    <div class="footer__details">
+      <p class="footer__line">KVK: {site.kvk}</p>
+      <address class="footer__line footer__address">{addressOneLine}</address>
+      <p class="footer__line">
+        <a href={mailtoLink}>{site.contact.email}</a>
+      </p>
+    </div>
+
+    <nav class="footer__nav" aria-label="Footernavigatie">
+      <ul class="footer__list">
+        {
+          footerLinks.map((link) => (
+            <li>
+              <a class="footer__link" href={link.href}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>&copy; {jaar} {site.name}. Alle rechten voorbehouden.</p>
+    <p class="footer__legal">{site.legalForm} · {site.address.city}, {site.address.country}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--c-dark);
+    color: #e7e5e2;
+    padding-block: clamp(3rem, 2.5rem + 2vw, 4.5rem) 2rem;
+  }
+
+  .footer__inner {
+    display: grid;
+    gap: 2.25rem;
+    padding-bottom: 2.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .footer__tagline {
+    margin-top: 0.9rem;
+    font-size: var(--fs-sm);
+    color: #9a9ea4;
+    letter-spacing: 0.02em;
+  }
+
+  .footer__details {
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
+    font-size: var(--fs-sm);
+    color: #b6b9be;
+  }
+
+  .footer__line a {
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    overflow-wrap: anywhere;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .footer__line a:hover {
+    border-color: var(--c-accent-bright);
+  }
+
+  .footer__address {
+    font-style: normal;
+  }
+
+  .footer__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--fs-sm);
+    font-weight: 550;
+    color: #d7d5d2;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .footer__link:hover {
+    color: var(--c-accent-bright);
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-top: 1.75rem;
+    font-size: var(--fs-xs);
+    color: #86898f;
+  }
+
+  @media (min-width: 48rem) {
+    .footer__inner {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.8fr);
+      gap: 2rem;
+    }
+
+    .footer__list {
+      flex-direction: column;
+      gap: 0;
+      align-items: flex-start;
+    }
+  }
+</style>

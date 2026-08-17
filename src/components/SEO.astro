@@ -1,0 +1,133 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Pad t.o.v. de site-root, bijv. '/' of '/privacy/'. */
+  path?: string;
+  /** Structured data alleen op de homepage. */
+  includeStructuredData?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  path = '/',
+  includeStructuredData = false,
+  noindex = false,
+} = Astro.props;
+
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? '';
+const canonical = new URL(path, Astro.site ?? Astro.url).href;
+const ogImage = `${siteUrl}${site.seo.ogImage}`;
+
+/**
+ * JSON-LD structured data.
+ *
+ * Bewust alleen bevestigde gegevens: naam, eigenaar, e-mail, adres en diensten.
+ * Geen verzonnen telefoonnummer, openingstijden, reviews of coördinaten.
+ *
+ * TODO (uitbreiden): zodra bekend, kunnen `telephone`, `openingHoursSpecification`
+ * en `geo` hier toegevoegd worden.
+ */
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': `${siteUrl}/#organisatie`,
+  name: site.name,
+  url: `${siteUrl}/`,
+  email: site.contact.email,
+  description: site.seo.description,
+  foundingDate: String(site.founded),
+  founder: {
+    '@type': 'Person',
+    name: site.owner,
+  },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    postalCode: site.address.postalCode,
+    addressLocality: site.address.city,
+    addressRegion: site.address.region,
+    addressCountry: site.address.countryCode,
+  },
+  areaServed: [
+    { '@type': 'AdministrativeArea', name: 'Gelderland' },
+    { '@type': 'Country', name: 'Nederland' },
+  ],
+  identifier: {
+    '@type': 'PropertyValue',
+    name: 'KVK',
+    value: site.kvk,
+  },
+  knowsAbout: [
+    'Grondwerk',
+    'Kraanwerk',
+    'Shovelwerk',
+    'Straatwerk',
+    'Transport',
+    'Machinewerk',
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Diensten',
+    itemListElement: services.map((service) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: service.title,
+        description: service.description,
+      },
+    })),
+  },
+  // Telefoonnummer ontbreekt bewust: e-mail is op dit moment het contactkanaal.
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'sales',
+    email: site.contact.email,
+    availableLanguage: ['nl'],
+  },
+};
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+{/* Open Graph */}
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content={site.seo.locale} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${site.name} — grondwerk, transport en machinewerk`} />
+
+{/* Twitter / X */}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={`${site.name} — grondwerk, transport en machinewerk`} />
+
+{/* Overige metadata */}
+<meta name="author" content={site.owner} />
+<meta name="geo.region" content="NL-GE" />
+<meta name="geo.placename" content={site.address.city} />
+
+{
+  includeStructuredData && (
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(structuredData)}
+    />
+  )
+}

@@ -1,0 +1,170 @@
+---
+import Button from './Button.astro';
+import { site, mailtoLink } from '../data/site';
+
+/**
+ * Over de vakman.
+ *
+ * TODO (portretfoto): plaats een foto van Raylison op locatie in
+ * `src/assets/raylison.jpg` en vervang het blok `.about__placeholder` door:
+ *   import { Image } from 'astro:assets';
+ *   import portret from '../assets/raylison.jpg';
+ *   <Image src={portret} alt="Raylison Burleson" widths={[420, 640]}
+ *          sizes="(min-width: 60rem) 40vw, 100vw" loading="lazy" class="about__image" />
+ * Het formaat van het beeldvlak (4/5) blijft dan hetzelfde.
+ */
+
+const kernwaarden = [
+  'Punctueel',
+  'Gedisciplineerd',
+  'Betrouwbaar',
+  'Praktisch',
+  'Professioneel',
+  'Hands-on',
+];
+
+const initialen = site.owner
+  .split(' ')
+  .map((deel) => deel[0])
+  .join('');
+---
+
+<section class="section section--warm" id="over-ons" aria-labelledby="over-ons-titel">
+  <div class="container about">
+    <div class="about__media" data-reveal>
+      <div class="about__frame">
+        {/* Placeholder tot er een portretfoto beschikbaar is. */}
+        <div class="about__placeholder" aria-hidden="true">
+          <span class="about__initials">{initialen}</span>
+        </div>
+      </div>
+      <p class="about__caption">
+        <strong>{site.owner}</strong><br />
+        Eigenaar · {site.legalForm} · sinds {site.founded}
+      </p>
+    </div>
+
+    <div class="about__content" data-reveal style="--reveal-delay: 80ms">
+      <p class="eyebrow">Over ons</p>
+      <h2 class="section-title" id="over-ons-titel">De vakman achter het bedrijf</h2>
+
+      <p class="about__lead">
+        {site.name} is in {site.founded} opgericht door {site.owner}. Vanuit een praktische en
+        gedisciplineerde werkmentaliteit ondersteunt hij opdrachtgevers bij grondwerk, transport,
+        straatwerk en machinewerk.
+      </p>
+
+      <p class="about__text">
+        Raylison werkt met eigen vervoer en gereedschappen en vindt betrouwbaarheid, punctualiteit
+        en duidelijke afspraken belangrijk.
+      </p>
+
+      <p class="about__text">
+        Of het nu gaat om een losse opdracht of om ondersteuning binnen een groter project: de
+        aanpak blijft hetzelfde — professioneel werken en leveren wat is afgesproken.
+      </p>
+
+      <ul class="about__values">
+        {kernwaarden.map((waarde) => <li class="about__value">{waarde}</li>)}
+      </ul>
+
+      <div class="about__actions">
+        <Button href="#contact" icon="arrowRight">Neem contact op</Button>
+        <Button href={mailtoLink} variant="secondary" icon="mail" iconPosition="start">
+          Stuur een e-mail
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    gap: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+    align-items: center;
+  }
+
+  .about__frame {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    box-shadow: var(--shadow);
+  }
+
+  .about__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 5;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245, 158, 11, 0.14), transparent 65%),
+      linear-gradient(165deg, #1e2127 0%, #101216 100%);
+  }
+
+  .about__initials {
+    font-size: clamp(3rem, 2rem + 5vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .about__caption {
+    margin-top: 1rem;
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+    line-height: 1.5;
+  }
+
+  .about__caption strong {
+    color: var(--c-ink);
+    font-weight: 650;
+  }
+
+  .about__lead {
+    margin-top: 1.25rem;
+    font-size: var(--fs-lead);
+    letter-spacing: -0.012em;
+  }
+
+  .about__text {
+    margin-top: 1rem;
+    color: var(--c-muted);
+    max-width: 56ch;
+  }
+
+  .about__values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .about__value {
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--c-line-strong);
+    border-radius: 999px;
+    background-color: var(--c-surface);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--c-ink-soft);
+  }
+
+  .about__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  @media (min-width: 60rem) {
+    .about {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    }
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+import SectionHeading from './SectionHeading.astro';
+import ContactForm from './ContactForm.astro';
+import Icon from './Icon.astro';
+import { site, mailtoLink, telLink, whatsappLink } from '../data/site';
+---
+
+<section class="section" id="contact" aria-labelledby="contact-titel">
+  <div class="container contact">
+    <div class="contact__intro">
+      <SectionHeading
+        eyebrow="Contact"
+        id="contact-titel"
+        title="Bespreek uw opdracht"
+        intro="Laat kort weten om wat voor werk het gaat, waar het is en wanneer het moet gebeuren. U krijgt zo snel mogelijk een reactie."
+      />
+
+      <ul class="contact__details" data-reveal>
+        <li class="contact__detail">
+          <span class="contact__detail-icon"><Icon name="mail" size={20} /></span>
+          <div>
+            <span class="contact__detail-label">E-mail</span>
+            <a class="contact-link" href={mailtoLink}>{site.contact.email}</a>
+          </div>
+        </li>
+
+        {
+          /* Verschijnt automatisch zodra PUBLIC_PHONE is ingevuld — zie .env.example. */
+          telLink && (
+            <li class="contact__detail">
+              <span class="contact__detail-icon">
+                <Icon name="phone" size={20} />
+              </span>
+              <div>
+                <span class="contact__detail-label">Telefoon</span>
+                <a class="contact-link" href={telLink}>
+                  {site.contact.phone}
+                </a>
+              </div>
+            </li>
+          )
+        }
+
+        {
+          /* Verschijnt automatisch zodra PUBLIC_WHATSAPP is ingevuld. */
+          whatsappLink && (
+            <li class="contact__detail">
+              <span class="contact__detail-icon">
+                <Icon name="whatsapp" size={20} />
+              </span>
+              <div>
+                <span class="contact__detail-label">WhatsApp</span>
+                <a class="contact-link" href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                  Stuur een bericht
+                </a>
+              </div>
+            </li>
+          )
+        }
+
+        <li class="contact__detail">
+          <span class="contact__detail-icon"><Icon name="mapPin" size={20} /></span>
+          <div>
+            <span class="contact__detail-label">Vestiging</span>
+            <address class="contact__address">
+              {site.address.street}<br />
+              {site.address.postalCode}
+              {site.address.city}
+            </address>
+          </div>
+        </li>
+      </ul>
+
+      <p class="contact__kvk" data-reveal>
+        {site.legalForm} · KVK {site.kvk} · Opgericht in {site.founded}
+      </p>
+    </div>
+
+    <div class="contact__form-wrap" data-reveal style="--reveal-delay: 90ms">
+      <h3 class="contact__form-title">Aanvraag versturen</h3>
+      <ContactForm />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    display: grid;
+    gap: clamp(2.5rem, 1.5rem + 4vw, 4rem);
+    align-items: start;
+  }
+
+  .contact__details {
+    display: grid;
+    gap: 1.25rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .contact__detail {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+  }
+
+  .contact__detail-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex: none;
+    border-radius: 12px;
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    color: var(--c-accent);
+  }
+
+  .contact__detail-label {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    margin-bottom: 0.1rem;
+  }
+
+  .contact__address {
+    font-style: normal;
+    font-weight: 550;
+    line-height: 1.5;
+    padding-block: 0.25rem;
+  }
+
+  .contact__kvk {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--c-line);
+    font-size: var(--fs-sm);
+    color: var(--c-muted);
+  }
+
+  .contact__form-wrap {
+    padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+  }
+
+  .contact__form-title {
+    font-size: var(--fs-h3);
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 62rem) {
+    .contact {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: clamp(3rem, 1rem + 5vw, 5rem);
+    }
+  }
+</style>
